@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+:root {
+  font-family: Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+  padding: 2em 5em;
+}
+
+.main-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  text-align: center;
+  margin: 10vh auto;
+  min-width: 500px;
+}
+
+.auth-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
