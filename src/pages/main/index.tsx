@@ -1,28 +1,66 @@
+import { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard";
-
-const productData = [
-  {
-    name: "Product 1",
-    price: 100,
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
-    description: "This is a description of product 1",
-  },
-  {
-    name: "Product 2",
-    price: 200,
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
-    description: "This is a description of product 2",
-  },
-];
+import { Product } from "../../types";
+import axiosClient from "../../axiosClient";
+import { Button, TextField } from "@mui/material";
+import AddNewProductModal from "../../components/AddNewProductModal";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux";
 
 const MainPage = () => {
+  const user = useSelector((state: RootState) => state.user);
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [productsToShow, setProductsToShow] = useState<Product[]>([]);
+
+  const [search, setSearch] = useState("");
+  const [addProductOpen, setAddProductOpen] = useState(false);
+
+  useEffect(() => {
+    axiosClient
+      .get("/products")
+      .then((res) => {
+        setProducts(res.data);
+        setProductsToShow(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    if (search.length === 0) setProductsToShow(products);
+    else
+      setProductsToShow(
+        products.filter((p) =>
+          p.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+        )
+      );
+  }, [search, products]);
+
   return (
-    <div className="main-page">
-      {productData.map((product) => (
-        <ProductCard key={product.name} {...product} />
-      ))}
+    <div>
+      <div className="main-page-top">
+        <TextField
+          fullWidth
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          label="Поиск по названию товара"
+          variant="outlined"
+        />
+        {user.isAdmin && (
+          <Button variant="contained" onClick={() => setAddProductOpen(true)}>
+            Добавить новый товар
+          </Button>
+        )}
+      </div>
+      <div className="main-page-products">
+        {productsToShow.map((product) => (
+          <ProductCard key={product.name} {...product} />
+        ))}
+      </div>
+      <AddNewProductModal
+        open={addProductOpen}
+        handleClose={() => setAddProductOpen(false)}
+      />
     </div>
   );
 };

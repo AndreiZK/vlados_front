@@ -14,7 +14,7 @@ import { addProduct, removeProduct } from "../redux/cartReducer";
 import { useState } from "react";
 import EditProductModal from "./EditProductModal";
 
-const ProductCard = ({ name, price, image, description }: Product) => {
+const ProductCard = ({ name, price, image, description, id }: Product) => {
   const [editOpen, setEditOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -28,11 +28,11 @@ const ProductCard = ({ name, price, image, description }: Product) => {
   };
 
   const handleAddToCart = () => {
-    dispatch(addProduct({ name, price, image, description }));
+    dispatch(addProduct({ name, price, image, description, id }));
   };
 
   const handleRemoveFromCart = () => {
-    dispatch(removeProduct({ name, price, image, description }));
+    dispatch(removeProduct({ name, price, image, description, id }));
   };
 
   return (
@@ -58,8 +58,21 @@ const ProductCard = ({ name, price, image, description }: Product) => {
           }
         />
         <CardMedia component="img" height="140" image={image} alt={name} />
-        <CardContent>
-          <Typography variant="body2" color="text.secondary" component="p">
+        <CardContent sx={{ width: "300px", height: "50px" }}>
+          <Typography
+            sx={{
+              width: "300px",
+              height: "50px",
+              overflowY: "scroll",
+              overflowX: "hidden",
+              "&::-webkit-scrollbar": {
+                width: "0",
+              },
+            }}
+            variant="body2"
+            color="text.secondary"
+            component="p"
+          >
             {description}
           </Typography>
         </CardContent>
@@ -67,7 +80,7 @@ const ProductCard = ({ name, price, image, description }: Product) => {
       <EditProductModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}
-        {...{ name, price, image, description }}
+        {...{ name, price, image, description, id }}
       />
     </div>
   );

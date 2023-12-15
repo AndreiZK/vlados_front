@@ -5,10 +5,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux";
 import { IconButton } from "@mui/material";
+import { removeUser } from "../redux/userReducer";
 
 const pathToTextMap = {
   "/": "Каталог продуктов",
@@ -18,6 +19,9 @@ const pathToTextMap = {
 };
 
 const Nav = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { pathname } = useLocation();
   const currentUser = useSelector((state: RootState) => state.user);
 
@@ -44,9 +48,13 @@ const Nav = () => {
             </Box>
           )}
           {!currentUser.isAuthenticated ? (
-            <Button color="inherit">Войти</Button>
+            <Button color="inherit" onClick={() => navigate("/auth/login")}>
+              Войти
+            </Button>
           ) : (
-            <Button color="inherit">Выйти</Button>
+            <Button color="inherit" onClick={() => dispatch(removeUser())}>
+              Выйти
+            </Button>
           )}
         </Toolbar>
       </AppBar>

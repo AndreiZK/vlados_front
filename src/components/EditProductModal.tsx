@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { Product } from "../types";
 import React, { useState } from "react";
+import axiosClient from "../axiosClient";
 
 const style = {
   position: "absolute",
@@ -32,10 +33,28 @@ const EditProductModal = ({
   handleClose,
   ...product
 }: EditProductModalProps) => {
+  console.log(product);
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.price);
   const [image, setImage] = useState(product.image);
   const [description, setDescription] = useState(product.description);
+
+  const handleEditProduct = () => {
+    console.log(product.id);
+    axiosClient
+      .put(`/products/${product.id}`, {
+        name,
+        price,
+        image,
+        description,
+      })
+      .then((res) => {
+        console.log(res.data);
+        handleClose();
+        location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <Modal
@@ -60,12 +79,19 @@ const EditProductModal = ({
             onChange={(e) => setPrice(Number(e.target.value))}
           />
           <TextField
+            label="Картинка (URL)"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+          />
+          <TextField
             label="Описание"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </Stack>
-        <Button variant="contained">Ввод</Button>
+        <Button onClick={handleEditProduct} variant="contained">
+          Ввод
+        </Button>
       </Box>
     </Modal>
   );

@@ -1,9 +1,15 @@
 import { TextField, Typography, Button } from "@mui/material";
 
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axiosClient from "../../axiosClient";
+import { setUser } from "../../redux/userReducer";
+import { useDispatch } from "react-redux";
 
 const AuthPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,11 +17,25 @@ const AuthPage = () => {
   const variant = pathname.split("/").pop();
 
   const handleLogin = () => {
-    console.log("login");
+    axiosClient
+      .post("/login", { username, password })
+      .then((res) => {
+        console.log(res.data);
+        dispatch(setUser(res.data));
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleRegister = () => {
-    console.log("register");
+    axiosClient
+      .post("/register", { username, password })
+      .then((res) => {
+        console.log(res.data);
+        dispatch(setUser(res.data));
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleButtonClick = variant === "login" ? handleLogin : handleRegister;

@@ -15,10 +15,18 @@ body {
   padding: 2em 5em;
 }
 
-.main-page {
+.main-page-products {
   display: flex;
   flex-wrap: wrap;
   gap: 2em;
+}
+
+.main-page-top {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  margin-bottom: 2em;
 }
 
 .auth-page {
